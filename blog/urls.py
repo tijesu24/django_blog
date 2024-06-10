@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import PostSitemap
+from .feeds import LatestPostsFeed
 
 sitemaps = {
     "posts": PostSitemap,
@@ -14,6 +15,7 @@ urlpatterns = [
     path('<slug:slug>/', views.post_detail, name='post_detail'),
     path('summernote/', include('django_summernote.urls')),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path("feed/rss", LatestPostsFeed(), name="post_feed"),
 ]
 
 

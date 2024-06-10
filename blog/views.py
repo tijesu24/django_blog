@@ -2,6 +2,7 @@ from .models import Post
 from .forms import CommentForm
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
+from django.utils.html import strip_tags
 
 
 class PostList(generic.ListView):
