@@ -28,6 +28,7 @@
             </div>
         </div>
     </header>
+    <div id="alert-message"></div>
     <div class="container">
         <div class="row">
             <!-- Blog Entries Column -->
@@ -62,6 +63,18 @@
                     <a href="?page={{ page_obj.next_page_number }}" class="page-link">NEXT &raquo;</a>
                 </li>
             {% endif %}
+        </ul>
+    {% endif %}
+    <!-- <ul id="password-reset-messages" class="messages" style="display: none;">
+        <li class="message success">
+            Orig: We've emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly. If you don't receive an email, please make sure you've entered the address you registered with, and check your spam folder.
+        </li>
+    </ul> -->
+    {% if messages %}
+        <ul id="password-reset-messages" class="messages" style="display: none;">
+            {% for message in messages %}
+                <li {% if message.tags %}class="message {{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
         </ul>
     {% endif %}
 {% endblock %}

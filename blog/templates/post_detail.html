@@ -19,7 +19,8 @@
                     <!-- comments -->
                     <h2>{{ comments.count }} comments</h2>
                     {% for comment in comments %}
-                        <div class="comments" style="padding: 10px;">
+                        <hr class="hr my-1">
+                        <div class="comments px-3 py-2">
                             <p class="font-weight-bold">
                                 {{ comment.name }}
                                 <span class=" text-muted font-weight-normal">{{ comment.created_on }}</span>
