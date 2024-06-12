@@ -1,8 +1,17 @@
+from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from .forms import RegisterForm, LoginForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+
+
 from .models import Post
 from .forms import CommentForm
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
-from django.utils.html import strip_tags
+
+from django.contrib.auth import login, logout, authenticate
 
 
 class PostList(generic.ListView):
@@ -31,3 +40,55 @@ def post_detail(request, slug):
                                            'comments': comments,
                                            'new_comment': new_comment,
                                            'comment_form': comment_form})
+
+
+def register(response):
+    if response.method == 'POST':
+        form = RegisterForm(response.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = RegisterForm()
+    return render(response, 'registration/register.html', {'form': form})
+
+    # login page
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+
+            user = form.login(request)
+            if user:
+                login(request, user)
+                return redirect('home')
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('home')
+    template_name = 'registration/change_password.html'
+
+
+# logout page
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('home')
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'users/password_reset.html'
+    email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('users-home')

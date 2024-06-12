@@ -1,3 +1,5 @@
 Pillow
 django
+crispy-bootstrap5
+django-crispy-forms 
 #form lib
