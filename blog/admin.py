@@ -18,6 +18,7 @@ from .models import Post, Comment
 
 class CommentInline(admin.TabularInline):
     model = Comment
+    readonly_fields = ('post', 'created_on', 'name', 'email', 'body')
 
 
 # class PostAdmin(admin.ModelAdmin):
@@ -157,21 +158,16 @@ class CommentAdmin(admin.ModelAdmin):
             elif self.value() is None:
                 return queryset.filter(active=False)
 
-    list_display = ('name', 'body', 'post', 'created_on', 'active')
+    list_display = ('name', 'body', 'post',  'active')
     list_filter = (
         CustomActiveFilter, 'created_on', 'post')
     search_fields = ('name', 'email', 'body', 'post')
     actions = ['approve_comments', 'disapprove_comments']
+    fields = ('post', 'created_on', 'name', 'email',  'body',  'active')
+    readonly_fields = ('post', 'created_on', 'name', 'email', 'body')
 
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
 
     def disapprove_comments(self, request, queryset):
         queryset.update(active=False)
-
-    def get_readonly_fields(self, request, obj=None):
-        readonly_fields = []  # Always make 'active' field editable
-        if not request.user.has_perm('blog.edit_comment_content'):
-            readonly_fields.extend(
-                ['name', 'email', 'body', 'post', 'created_on'])
-        return readonly_fields

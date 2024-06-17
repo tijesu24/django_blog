@@ -1,3 +1,4 @@
+from datetime import datetime
 import email
 from django.db import models
 from django.contrib.auth.models import User
@@ -40,13 +41,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='comments')
     created_on = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=80)
     email = models.EmailField()
     body = models.TextField()
     active = models.BooleanField(default=False)
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='comments')
 
     class Meta:
         ordering = ['created_on']
@@ -58,7 +59,9 @@ class Comment(models.Model):
         ]
 
     def __str__(self) -> str:
-        return 'Comment {} by {}'.format(self.body, self.name)
+        # Use strftime to format the datetime object
+        formatted_date = self.created_on.strftime('%B %d, %Y at %I:%M %p')
+        return f'Comment by {self.name} on {formatted_date}'
 
 
 class Image(models.Model):
