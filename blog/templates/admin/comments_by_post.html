@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+    <h1>{% trans "Comments by Post" %}</h1>
+    {% for post in posts %}
+        <h2>{{ post.title }}</h2>
+        <ul>
+            {% for comment in post.comments.all %}
+                <li>{{ comment.created_on }} - {{ comment.name }}: {{ comment.body }}</li>
+            {% empty %}
+                <li>{% trans "No comments" %}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_summernote',
     'django.contrib.sitemaps',
+    'image_uploader_widget',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
@@ -147,6 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
