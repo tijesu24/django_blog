@@ -15,6 +15,8 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
+from filebrowser import settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,6 +36,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'easy_thumbnails',
+    'filer',
     'blog',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,8 +49,19 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_summernote',
     'django.contrib.sitemaps',
-    'image_uploader_widget',
+    'image_uploader_widget',  # TODO: might need to delete though
+
 ]
+
+FILER_CANONICAL_URL = 'uploads/'
+
+THUMBNAIL_PROCESSORS = (
+    'easy_thumbnails.processors.colorspace',
+    'easy_thumbnails.processors.autocrop',
+    # 'easy_thumbnails.processors.scale_and_crop',
+    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+    'easy_thumbnails.processors.filters',
+)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -147,7 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'blog/media/')
 
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'

@@ -2,6 +2,8 @@ import email
 from django.db import models
 from django.contrib.auth.models import User
 
+from filer.fields.image import FilerImageField
+
 
 STATUS = (
     (0, "Draft"),
@@ -15,7 +17,8 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='blog_posts')
     updated_on = models.DateTimeField(auto_now=True)
-    cover_image = models.ImageField(upload_to="%Y/%m/%d/", blank=True)
+    cover_image = FilerImageField(null=True, blank=True,
+                                  related_name="cover_image", on_delete=models.CASCADE)
     content = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)

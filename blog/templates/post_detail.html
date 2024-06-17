@@ -12,7 +12,9 @@
                     </h1>
                     <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
                     {% if post.cover_image.url is not None %}
-                        <img src="{{ post.cover_image.url }}" class="img-fluid" id="cover-photo" />
+                        <img src="{{ MEDIA_URL }}{{ post.cover_image.url }}"
+                             class="img-fluid"
+                             id="cover-photo" />
                     {% endif %}
                 </div>
                 <div class="card-text px-3">{{ post.content | safe }}</div>

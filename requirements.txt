@@ -7,4 +7,4 @@ django-image-uploader-widget
 sorl-thumbnail==12.4a1
 zlib
 Pillow
-django-file-picker
+django-filer
