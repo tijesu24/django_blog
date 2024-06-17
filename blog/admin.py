@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 from django.contrib import messages
@@ -28,27 +30,6 @@ class CommentInline(admin.TabularInline):
 
 
 # admin.site.register(Post, PostAdmin)
-
-
-# @admin.register(Comment)
-# class CommentAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'body', 'post', 'created_on', 'active')
-#     list_filter = ('active', 'created_on')
-#     search_fields = ('name', 'email', 'body')
-#     actions = ['approve_comments', 'disapprove_comments']
-
-#     def approve_comments(self, request, queryset):
-#         queryset.update(active=True)
-
-#     def disapprove_comments(self, request, queryset):
-#         queryset.update(active=False)
-
-#     def get_readonly_fields(self, request, obj=None):
-#         readonly_fields = []  # Always make 'active' field editable
-#         if not request.user.has_perm('blog.edit_comment_content'):
-#             readonly_fields.extend(
-#                 ['name', 'email', 'body', 'post', 'created_on'])
-#         return readonly_fields
 
 
 class PostAdmin(SummernoteModelAdmin):
@@ -124,24 +105,73 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 
-class CustomCommentAdmin(admin.ModelAdmin):
-    change_list_template = 'admin/comments_by_post.html'
+# class CustomCommentAdmin(admin.ModelAdmin):
+#     change_list_template = 'admin/comments_by_post.html'
 
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('comments-by-post/', self.admin_site.admin_view(
-                self.comments_by_post_view), name='comments-by-post'),
-        ]
-        return custom_urls + urls
+#     def get_urls(self):
+#         urls = super().get_urls()
+#         custom_urls = [
+#             path('comments-by-post/', self.admin_site.admin_view(
+#                 self.comments_by_post_view), name='comments-by-post'),
+#         ]
+#         return custom_urls + urls
 
-    def comments_by_post_view(self, request):
-        posts = Post.objects.prefetch_related('comments').all()
-        context = dict(
-            self.admin_site.each_context(request),
-            posts=posts,
-        )
-        return render(request, 'admin/comments_by_post.html', context)
+#     def comments_by_post_view(self, request):
+#         posts = Post.objects.prefetch_related('comments').all()
+#         context = dict(
+#             self.admin_site.each_context(request),
+#             posts=posts,
+#         )
+#         return render(request, 'admin/comments_by_post.html', context)
 
 
-admin.site.register(Comment, CustomCommentAdmin)
+# admin.site.register(Comment, CustomCommentAdmin)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    class CustomActiveFilter(admin.SimpleListFilter):
+        title = _('Active')
+        parameter_name = 'active'
+
+        def lookups(self, request, model_admin):
+            return (
+                (None, _('No')),
+                ('yes', _('Yes')),
+                ('all', _('All')),
+            )
+
+        def choices(self, cl):
+            for lookup, title in self.lookup_choices:
+                yield {
+                    'selected': self.value() == lookup,
+                    'query_string': cl.get_query_string({
+                        self.parameter_name: lookup,
+                    }, []),
+                    'display': title,
+                }
+
+        def queryset(self, request, queryset):
+            if self.value() == 'yes':
+                return queryset.filter(active=True)
+            elif self.value() is None:
+                return queryset.filter(active=False)
+
+    list_display = ('name', 'body', 'post', 'created_on', 'active')
+    list_filter = (
+        CustomActiveFilter, 'created_on', 'post')
+    search_fields = ('name', 'email', 'body', 'post')
+    actions = ['approve_comments', 'disapprove_comments']
+
+    def approve_comments(self, request, queryset):
+        queryset.update(active=True)
+
+    def disapprove_comments(self, request, queryset):
+        queryset.update(active=False)
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = []  # Always make 'active' field editable
+        if not request.user.has_perm('blog.edit_comment_content'):
+            readonly_fields.extend(
+                ['name', 'email', 'body', 'post', 'created_on'])
+        return readonly_fields
