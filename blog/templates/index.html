@@ -36,7 +36,10 @@
                 {% for post in post_list %}
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h2 class="card-title">{{ post.title }}</h2>
+                            <h2 class="card-title">
+                                <a href="{% url 'post_detail' post.slug %}"
+                                   class="link-dark  link-offset-1 link-underline link-underline-opacity-0 link-underline-opacity-75-hover">{{ post.title }}</a>
+                            </h2>
                             <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on }}</p>
                             <p class="card-text">{{ post.content|striptags|slice:":200" }}</p>
                             <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">Read More &rarr;</a>

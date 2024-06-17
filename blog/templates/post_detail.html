@@ -20,34 +20,38 @@
                 <div class="card-text px-3">{{ post.content | safe }}</div>
             </div>
         </div>
-        <div class="col-md-8 card mb-4  mt-3 ">
-            <div class="card-body">
-                <!-- comments -->
-                <h2>{{ comments.count }} comments</h2>
-                {% for comment in comments %}
-                    <hr class="hr my-1">
-                    <div class="comments px-3 py-2">
-                        <p class="font-weight-bold">
-                            {{ comment.name }}
-                            <span class=" text-muted font-weight-normal">{{ comment.created_on }}</span>
-                        </p>
-                        {{ comment.body | linebreaks }}
-                    </div>
-                {% endfor %}
+        <div class="row justify-content-center">
+            <div class="col-xl-8 card mb-4  mt-3 ">
+                <div class="card-body">
+                    <!-- comments -->
+                    <h2>{{ comments.count }} comments</h2>
+                    {% for comment in comments %}
+                        <hr class="hr my-1">
+                        <div class="comments px-3 py-2">
+                            <p class="font-weight-bold">
+                                {{ comment.name }}
+                                <span class=" text-muted font-weight-normal">{{ comment.created_on }}</span>
+                            </p>
+                            {{ comment.body | linebreaks }}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        <div class="col-md-8 card mb-4  mt-3 ">
-            <div class="card-body">
-                {% if new_comment %}
-                    <div class="alert alert-success" role="alert">Your comment is awaiting moderation</div>
-                {% else %}
-                    <h3>Leave a comment</h3>
-                    <form method="post" style="margin-top: 1.3em;">
-                        {{ comment_form | crispy }}
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
-                    </form>
-                {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-xl-8 card mb-4  mt-3 ">
+                <div class="card-body">
+                    {% if new_comment %}
+                        <div class="alert alert-success" role="alert">Your comment is awaiting moderation</div>
+                    {% else %}
+                        <h3>Leave a comment</h3>
+                        <form method="post" style="margin-top: 1.3em;">
+                            {{ comment_form | crispy }}
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
