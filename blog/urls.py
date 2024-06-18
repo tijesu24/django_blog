@@ -1,5 +1,5 @@
 from . import views
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -7,6 +7,8 @@ from django.contrib.sitemaps.views import sitemap
 from .sitemaps import PostSitemap
 from .feeds import LatestPostsFeed
 from django.contrib.auth import views as auth_views
+
+from django.views.static import serve
 
 
 sitemaps = {
@@ -16,7 +18,8 @@ sitemaps = {
 urlpatterns = [
     path('', views.PostList.as_view(), name='home'),
 
-    path('summernote/', include('django_summernote.urls')),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
+    # path('summernote/', include('django_summernote.urls')),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("feed/rss", LatestPostsFeed(), name="post_feed"),
     path('login/', views.user_login, name='login'),
@@ -41,3 +44,11 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+    # serving media files only on debug mode
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT
+        }),
+    ]

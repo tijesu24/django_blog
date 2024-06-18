@@ -1,3 +1,4 @@
+
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -5,7 +6,7 @@ from django.urls import path
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django_summernote.admin import SummernoteModelAdmin
+# from django_summernote.admin import SummernoteModelAdmin
 from .models import STATUS, Post
 from django.contrib import admin
 
@@ -33,8 +34,9 @@ class CommentInline(admin.TabularInline):
 # admin.site.register(Post, PostAdmin)
 
 
-class PostAdmin(SummernoteModelAdmin):
-    summernote_fields = ('content',)
+# class PostAdmin(SummernoteModelAdmin):
+class PostAdmin(admin.ModelAdmin):
+    # summernote_fields = ('content',)
     list_display = ('title', 'slug', 'status', 'created_on')
     list_filter = ("status",)
     search_fields = ['title', 'content']

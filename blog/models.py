@@ -3,7 +3,9 @@ import email
 from django.db import models
 from django.contrib.auth.models import User
 
+
 from filer.fields.image import FilerImageField
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 STATUS = (
@@ -20,7 +22,8 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     cover_image = FilerImageField(null=True, blank=True,
                                   related_name="cover_image", on_delete=models.CASCADE)
-    content = models.TextField()
+    content = CKEditor5Field(
+        'Text', config_name='extends', null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
 

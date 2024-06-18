@@ -3,8 +3,6 @@ crispy-bootstrap5
 django-crispy-forms 
 #form lib
 python-dotenv
-django-image-uploader-widget
-sorl-thumbnail==12.4a1
-zlib
-Pillow
 django-filer
+django-tinymce
+django-ckeditor
